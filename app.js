@@ -42,14 +42,22 @@ const viewCustomer = async () => {
 }
 
 const updateCustomer = async () => {
-    const id = prompt(`Please enter ID of customer.`)
+    const id = prompt("Please enter ID of customer.");
     const newName = prompt("What is the customer's new name?")
-    const newAge = prompt("What is the customer's new age?")
-    const updatedCustomer = Customer.findByIdAndUpdate(id, 
-        { name: newName }, 
-       { age: newAge }
+    const newAge = parseInt(prompt("What is the customer's new age?"))
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+        id,
+        { name: newName, age: newAge },
+        { new: true }
     );
-    console.log(`The updated customer is: $(getCustomer)`)
+    console.log("Updated Customer:", updatedCustomer)
+};
+
+
+const deleteCustomer = async () => {
+    const id = prompt("Please enter ID of customer.");
+    const removedCustomer = await Customer.findByIdAndDelete(id);
+    console.log("Removed Customer:", removedCustomer)
 };
 
 /*------------------------------- Main App -------------------------------*/
@@ -69,11 +77,16 @@ const connectToDatabase = async () => {
         await viewCustomer();
     } else if (choice === '3') {
         await updateCustomer();
+    } else if (choice === '4') {
+        await deleteCustomer();
+    } else if (choice === '5') {
+
+        console.log('exiting...')
+
     }
-
     await mongoose.disconnect();
-    console.log('You are now disconnecting from Mongoose');
-
+    console.log("You are now disconnected from MonoDB")
+    process.exit();
 };
 
 connectToDatabase();
